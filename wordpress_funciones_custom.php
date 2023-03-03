@@ -131,3 +131,12 @@ add_action('do_feed_atom_comments', 'muu_disable_feed', 1);
 // Remuevo los elementos del cabezal
 remove_action( 'wp_head', 'feed_links_extra', 3 );
 remove_action( 'wp_head', 'feed_links', 2 );
+
+/*=========================================================================================================
+// Función para quitar los estilos de los bloque de Woocommerce
+=========================================================================================================*/
+function muustack_quitar_estilos_bloques_woo() {
+wp_deregister_style( 'wc-blocks-style' );
+wp_dequeue_style( 'wc-blocks-style' );
+}
+add_action( 'enqueue_block_assets', 'muustack_quitar_estilos_bloques_woo' );
