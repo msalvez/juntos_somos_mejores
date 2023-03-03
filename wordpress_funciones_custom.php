@@ -101,3 +101,33 @@ function change_footer_admin() {
 }
 
 add_filter('admin_footer_text', 'change_footer_admin');
+
+
+
+/*========================================================================================================= */
+// Función de exclusión: solo mostrar los posts en resultados de búsqueda.
+/*========================================================================================================= */
+add_action('pre_get_posts','exclude_all_pages_search');
+function exclude_all_pages_search($query) {
+    $query->set( 'post_type', 'post' );
+}
+
+
+/*========================================================================================================= 
+// Función para deshabilitar los feeds de Wordpress
+========================================================================================================= */
+function muu_disable_feed() {
+ wp_die( __( 'No hay feeds disponibles, Volver al inicio <a href="'. esc_url( home_url( '/' ) ) .'">Inicio</a>!' ) );
+}
+
+add_action('do_feed', 'muu_disable_feed', 1);
+add_action('do_feed_rdf', 'muu_disable_feed', 1);
+add_action('do_feed_rss', 'muu_disable_feed', 1);
+add_action('do_feed_rss2', 'muu_disable_feed', 1);
+add_action('do_feed_atom', 'muu_disable_feed', 1);
+add_action('do_feed_rss2_comments', 'muu_disable_feed', 1);
+add_action('do_feed_atom_comments', 'muu_disable_feed', 1);
+
+// Remuevo los elementos del cabezal
+remove_action( 'wp_head', 'feed_links_extra', 3 );
+remove_action( 'wp_head', 'feed_links', 2 );
