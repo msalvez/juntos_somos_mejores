@@ -140,3 +140,55 @@ wp_deregister_style( 'wc-blocks-style' );
 wp_dequeue_style( 'wc-blocks-style' );
 }
 add_action( 'enqueue_block_assets', 'muustack_quitar_estilos_bloques_woo' );
+
+
+/*=========================================================================================================
+// Función para quitar los estilos adicionales del header
+=========================================================================================================*/
+function remove_wp_head_styles() {
+    // Desactivar estilos generados por WordPress en el <head>
+    wp_dequeue_style('wp-block-library'); // Estilos de los bloques de Gutenberg
+    wp_dequeue_style('wp-block-library-theme'); // Estilos del tema para los bloques de Gutenberg
+    wp_dequeue_style('wp-embed'); // Estilos para la incrustación de contenido
+
+    // Si hay más estilos generados por WordPress que deseas desactivar, puedes agregarlos aquí
+}
+add_action('wp_enqueue_scripts', 'remove_wp_head_styles', 100);
+
+/*=========================================================================================================
+// Función para quitar los estilos Emojis
+=========================================================================================================*/
+function disable_emojis() {
+    // Desactivar emojis
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+
+    // Desactivar Embeds (incrustaciones)
+    remove_action('wp_head', 'wp_oembed_add_discovery_links');
+    remove_action('wp_head', 'wp_oembed_add_host_js');
+}
+add_action('init', 'disable_emojis');
+
+/*=========================================================================================================
+// Función para quitar el feed
+=========================================================================================================*/
+function muu_disable_feed() {
+ wp_die( __( 'No hay feeds disponibles, Volver al inicio <a href="'. esc_url( home_url( '/' ) ) .'">Inicio</a>!' ) );
+}
+
+add_action('do_feed', 'muu_disable_feed', 1);
+add_action('do_feed_rdf', 'muu_disable_feed', 1);
+add_action('do_feed_rss', 'muu_disable_feed', 1);
+add_action('do_feed_rss2', 'muu_disable_feed', 1);
+add_action('do_feed_atom', 'muu_disable_feed', 1);
+add_action('do_feed_rss2_comments', 'muu_disable_feed', 1);
+add_action('do_feed_atom_comments', 'muu_disable_feed', 1);
+
+// Remuevo los elementos del cabezal
+remove_action( 'wp_head', 'feed_links_extra', 3 );
+remove_action( 'wp_head', 'feed_links', 2 );
